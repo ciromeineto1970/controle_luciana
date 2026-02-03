@@ -1,15 +1,8 @@
 import streamlit as st
-from modules.auth import check_password
 
-st.set_page_config(page_title="Finanças Pro", layout="wide")
+st.set_page_config(page_title="Meu Financeiro", layout="wide")
 
-if check_password():
-    st.sidebar.success("Bem-vindo ao seu controle financeiro!")
-    st.title("🏠 Home")
-    
-    st.write("""
-    ### Dashboard Geral
-    Utilize o menu lateral para navegar entre o Dashboard detalhado e o cadastro de transações.
-    """)
-    
-    # Aqui você pode colocar um resumo rápido (Ex: Saldo Total)
+st.title("💰 Controle Financeiro Pessoal")
+st.write("Bem-vindo! Use o menu lateral para navegar.")
+
+# Aqui você poderia colocar a lógica de auth.py futuramente
