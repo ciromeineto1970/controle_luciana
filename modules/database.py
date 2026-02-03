@@ -1,30 +1,23 @@
 import streamlit as st
-from st_supabase_connection import SupabaseConnection
+from supabase import create_client, Client
 
-# Inicializa a conexão usando os Secrets do Streamlit
-conn = st.connection("supabase", type=SupabaseConnection)
+# Conecta ao Supabase usando segredos do Streamlit
+def init_connection():
+    url = st.secrets["SUPABASE_URL"]
+    key = st.secrets["SUPABASE_KEY"]
+    return create_client(url, key)
 
-def listar_transacoes():
-    """Busca todas as transações no banco de dados."""
-    try:
-        # Nota: Em um sistema multi-usuário, filtraríamos por user_id aqui
-        res = conn.table("transacoes").select("*").order("data", desc=True).execute()
-        return res.data
-    except Exception as e:
-        st.error(f"Erro ao buscar dados: {e}")
-        return []
+supabase = init_connection()
 
-def salvar_transacao(descricao, valor, tipo, data):
-    """Insere uma nova transação no Supabase."""
-    try:
-        dados = {
-            "descricao": descricao,
-            "valor": valor,
-            "tipo": tipo,
-            "data": str(data)
-        }
-        conn.table("transacoes").insert([dados]).execute()
-        return True
-    except Exception as e:
-        st.error(f"Erro ao salvar: {e}")
-        return False
+def get_transacoes():
+    return supabase.table("transacoes").select("*").execute()
+
+def insert_transacao(descricao, valor, tipo, categoria, data):
+    data_dict = {
+        "descricao": descricao,
+        "valor": valor,
+        "tipo": tipo,
+        "categoria": categoria,
+        "data": str(data)
+    }
+    return supabase.table("transacoes").insert(data_dict).execute()
